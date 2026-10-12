@@ -116,6 +116,9 @@ object SP {
 
         /** 播放器 画面比例 */
         VIDEO_PLAYER_ASPECT_RATIO,
+
+        /** 播放器 音量增益（dB） */
+        VIDEO_PLAYER_VOLUME_GAIN,
     }
 
     /** ==================== 应用 ==================== */
@@ -280,6 +283,11 @@ object SP {
             sp.getInt(KEY.VIDEO_PLAYER_ASPECT_RATIO.name, VideoPlayerAspectRatio.ORIGINAL.value)
         )
         set(value) = sp.edit().putInt(KEY.VIDEO_PLAYER_ASPECT_RATIO.name, value.value).apply()
+
+    /** 播放器 音量增益（dB），0表示不增益 */
+    var videoPlayerVolumeGain: Int
+        get() = sp.getInt(KEY.VIDEO_PLAYER_VOLUME_GAIN.name, 0)
+        set(value) = sp.edit().putInt(KEY.VIDEO_PLAYER_VOLUME_GAIN.name, value).apply()
 
     enum class UiTimeShowMode(val value: Int) {
         /** 隐藏 */

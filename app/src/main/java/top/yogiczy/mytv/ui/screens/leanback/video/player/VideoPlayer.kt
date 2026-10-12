@@ -34,6 +34,8 @@ abstract class LeanbackVideoPlayer(
 
     abstract fun setVideoSurfaceView(surfaceView: SurfaceView)
 
+    abstract fun setVolumeGain(gainDb: Int)
+
     private val onResolutionListeners = mutableListOf<(width: Int, height: Int) -> Unit>()
     private val onErrorListeners = mutableListOf<(error: PlaybackException?) -> Unit>()
     private val onReadyListeners = mutableListOf<() -> Unit>()

@@ -249,4 +249,12 @@ class LeanbackSettingsViewModel : ViewModel() {
             _videoPlayerAspectRatio = value
             SP.videoPlayerAspectRatio = value
         }
+
+    private var _videoPlayerVolumeGain by mutableIntStateOf(SP.videoPlayerVolumeGain)
+    var videoPlayerVolumeGain: Int
+        get() = _videoPlayerVolumeGain
+        set(value) {
+            _videoPlayerVolumeGain = value
+            SP.videoPlayerVolumeGain = value
+        }
 }

@@ -1,6 +1,7 @@
 package top.yogiczy.mytv.ui.screens.leanback.video.player
 
 import android.content.Context
+import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
 import android.view.SurfaceView
 import androidx.annotation.OptIn
@@ -40,6 +41,10 @@ class LeanbackMedia3VideoPlayer(
     ).build().apply {
         playWhenReady = true
     }
+
+    private var loudnessEnhancer: LoudnessEnhancer? = null
+    private var loudnessSessionId: Int = 0
+    private var pendingVolumeGain: Int = SP.videoPlayerVolumeGain
 
     private val contentTypeAttempts = mutableMapOf<Int, Boolean>()
     private var updatePositionJob: Job? = null
@@ -204,9 +209,13 @@ class LeanbackMedia3VideoPlayer(
         videoPlayer.addListener(playerListener)
         videoPlayer.addAnalyticsListener(metadataListener)
         videoPlayer.addAnalyticsListener(eventLogger)
+        // 初始化音量增益
+        applyVolumeGain(pendingVolumeGain)
     }
 
     override fun release() {
+        loudnessEnhancer?.release()
+        loudnessEnhancer = null
         videoPlayer.removeListener(playerListener)
         videoPlayer.removeAnalyticsListener(metadataListener)
         videoPlayer.removeAnalyticsListener(eventLogger)
@@ -230,5 +239,33 @@ class LeanbackMedia3VideoPlayer(
 
     override fun setVideoSurfaceView(surfaceView: SurfaceView) {
         videoPlayer.setVideoSurfaceView(surfaceView)
+    }
+
+    override fun setVolumeGain(gainDb: Int) {
+        pendingVolumeGain = gainDb
+        applyVolumeGain(gainDb)
+    }
+
+    private fun applyVolumeGain(gainDb: Int) {
+        try {
+            if (gainDb <= 0) {
+                loudnessEnhancer?.setEnabled(false)
+                return
+            }
+
+            val sessionId = videoPlayer.audioSessionId
+            if (loudnessEnhancer == null || loudnessSessionId != sessionId) {
+                loudnessEnhancer?.release()
+                loudnessEnhancer = LoudnessEnhancer(sessionId)
+                loudnessSessionId = sessionId
+            }
+
+            loudnessEnhancer?.apply {
+                setTargetGain(gainDb * 100) // 1dB = 100mB
+                enabled = true
+            }
+        } catch (e: Exception) {
+            // LoudnessEnhancer 在某些设备上可能不可用，忽略错误
+        }
     }
 }

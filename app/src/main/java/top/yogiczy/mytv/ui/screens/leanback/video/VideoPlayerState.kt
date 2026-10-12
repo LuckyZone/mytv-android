@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import top.yogiczy.mytv.ui.screens.leanback.video.player.LeanbackMedia3VideoPlayer
 import top.yogiczy.mytv.ui.screens.leanback.video.player.LeanbackVideoPlayer
+import top.yogiczy.mytv.ui.utils.SP
 
 /**
  * 播放器状态
@@ -51,6 +52,10 @@ class LeanbackVideoPlayerState(
         instance.setVideoSurfaceView(surfaceView)
     }
 
+    fun setVolumeGain(gainDb: Int) {
+        instance.setVolumeGain(gainDb)
+    }
+
     private val onReadyListeners = mutableListOf<() -> Unit>()
     private val onErrorListeners = mutableListOf<() -> Unit>()
     private val onCutoffListeners = mutableListOf<() -> Unit>()
@@ -69,6 +74,7 @@ class LeanbackVideoPlayerState(
 
     fun initialize() {
         instance.initialize()
+        instance.setVolumeGain(SP.videoPlayerVolumeGain)
         instance.onResolution { width, height ->
             val defaultAspectRatio = defaultAspectRatioProvider()
 

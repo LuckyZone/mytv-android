@@ -68,6 +68,28 @@ fun LeanbackSettingsCategoryVideoPlayer(
                 remoteConfig = true,
             )
         }
+
+        item {
+            val max = 20
+            val step = 2
+
+            LeanbackSettingsCategoryListItem(
+                headlineContent = "音量增益",
+                supportingContent = "增强直播流音量，部分设备可能不支持",
+                trailingContent = if (settingsViewModel.videoPlayerVolumeGain > 0) {
+                    "+${settingsViewModel.videoPlayerVolumeGain}dB"
+                } else {
+                    "关闭"
+                },
+                onSelected = {
+                    settingsViewModel.videoPlayerVolumeGain =
+                        (settingsViewModel.videoPlayerVolumeGain + step) % (max + step)
+                },
+                onLongSelected = {
+                    settingsViewModel.videoPlayerVolumeGain = 0
+                },
+            )
+        }
     }
 }
 

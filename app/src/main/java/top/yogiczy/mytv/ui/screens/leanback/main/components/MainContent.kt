@@ -75,6 +75,10 @@ fun LeanbackMainContent(
         videoPlayerState = videoPlayerState,
         iptvGroupList = iptvGroupList,
     )
+
+    LaunchedEffect(settingsViewModel.videoPlayerVolumeGain) {
+        videoPlayerState.setVolumeGain(settingsViewModel.videoPlayerVolumeGain)
+    }
     val panelChannelNoSelectState = rememberLeanbackPanelChannelNoSelectState(
         onChannelNoConfirm = {
             val channelNo = it.toInt() - 1
